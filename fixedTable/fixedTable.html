@@ -1,0 +1,166 @@
+<script src='jquery-1.10.2.min.js'></script>
+<!-- <script src='jquery-1.8.3.min.js'></script> -->
+
+
+<style>
+  .cass-table{
+    table-layout: fixed !important;
+  }
+  
+  .new-widget-header {
+    width: 40px !important;
+    height:18px;
+    padding:2px !important;
+  }
+  
+  .new-widget-content {
+    width: 40px !important;
+    height:18px;
+    text-align: center;
+    padding:2px !important;
+  }
+  
+  .new-widget-row {
+    width: 16px !important;
+    height:18px;
+    border-right-width: 1px !important;
+    padding:2px !important;
+  }
+   
+</style>
+
+<div id="tableScroll" style="height: 500px">
+</div>
+
+<script>
+  
+(function(){  
+  "use strict";//important
+  
+  var cssClass          = ["fancyTable","cass-table"],
+      styleTableMain    = {"margin":"0","width":"100%"},
+      styleTableRow     = {"margin":"0"},
+      styleTableHead    = {"margin":"0","width":"100"},
+      styleTableContent = {"margin":"0","width":"100"};
+
+  //Contenidos
+  var leftMain   = "<tr><th>Mat</th></tr>",
+  
+      headRows   = function(){
+        var celdas = "<tr>";
+        for (var i=1; i < 1000;i++){
+          celdas += "<th class='new-widget-header'>"+ i +"</th>";
+        }
+        return celdas + "</tr>";
+      }(),
+            
+      centerRows = function(){
+        var celdas = "";
+        for (var f=0; f < 40;f++){
+          celdas += "<tr>";
+          for (var i=1; i < 1000;i++){
+            celdas += "<td class='new-widget-content'>de</td>";
+          }
+          celdas += "</tr>";
+        }
+        return celdas;
+      }(),
+          
+      leftRows   = function(){
+        var celdas = "";
+        for (var i=0; i < 40;i++){
+          celdas += "<tr><td class='new-widget-row'>row_a"+ i;
+          celdas += "</td><td class='new-widget-row'>row_b"+ i +"</td></tr>";
+        }
+        return celdas;
+      }();
+  
+  // Generación de la Estructura Base
+  var tableScroll   = $("#tableScroll"),
+      baseStructure = "";
+
+  baseStructure += "<div class='rowLeft'>\n";
+  baseStructure += "  <div class='mainLf'>\n";
+  baseStructure += "    <table>\n";
+  baseStructure += "      <thead>\n";
+  baseStructure += "      </thead>\n";
+  baseStructure += "    </table>\n";
+  baseStructure += "  </div>\n";
+  baseStructure += "  <div class='rowFixedLf'>\n";
+  //              <!--Tabla que contiene las celdas de la columna estatica-->"
+  baseStructure += "    <table>\n";
+  baseStructure += "      <tbody>\n";
+  baseStructure += "      </tbody>\n";
+  baseStructure += "    </table>\n";
+  baseStructure += "  </div>\n";
+  baseStructure += "</div>\n";
+  baseStructure += "<div class='rowCenter'>\n";
+  baseStructure += "  <div class='headerFixed'>\n";
+  //              <!--Tabla que contiene las celdas del Ecabezado-->"
+  baseStructure += "    <table>\n";
+  baseStructure += "      <thead>\n";          
+  baseStructure += "      </thead>\n";
+  baseStructure += "    </table>\n";
+  baseStructure += "  </div>\n";
+  baseStructure += "  <div class='content'>\n";
+  //              <!--Tabla que contiene las celdas del Contenido-->
+  baseStructure += "    <table>\n";
+  baseStructure += "      <tbody>\n";
+  baseStructure += "      </tbody>\n";
+  baseStructure += "    </table>\n";
+  baseStructure += "  </div>\n";
+  baseStructure += "</div>\n";  
+  // Fin de la Generación de la Estructura Base
+  
+  tableScroll.append(baseStructure);
+  
+  var mainContent   = $(".mainLf > table > thead"),
+      leftContent   = $(".rowFixedLf > table > tbody"),
+      centerContent = $(".content > table > tbody"),
+      headContent   = $(".headerFixed > table > thead");
+  
+  //Add Class
+  $(".mainLf > table").addClass(cssClass.join(" "));
+  $(".rowFixedLf > table").addClass(cssClass.join(" "));
+  $(".headerFixed > table").addClass(cssClass.join(" "));
+  $(".content > table").addClass(cssClass.join(" "));
+  //Add Style
+  $(".mainLf > table").css(styleTableMain);
+  $(".rowFixedLf > table").css(styleTableRow);
+  $(".headerFixed > table").css(styleTableHead);
+  $(".content > table").css(styleTableContent);   
+  //llenado de las tablas contenedoras    
+  mainContent.append(leftMain);
+  leftContent.append(leftRows);
+  centerContent.append(centerRows);
+  headContent.append(headRows);
+  /*Auto Configuración de la Tabla
+ *-------------------------------------*/  
+  //Columnas contenedoras  
+  $(".rowLeft").css({"float":"left"});
+  $(".rowCenter").css({"float":"left"});
+  $(".rowRight").css({"float":"left"});
+  //configuración de los tamaños de acuerdo a los contenidos
+  $(".rowFixedLf").width(leftContent.width());
+  $(".headerFixed").height(headContent.height());
+  $(".content").width(tableScroll.width() - leftContent.width());
+  $(".content").height(tableScroll.height() - headContent.height());
+  //configuración de los Scroll
+  $(".rowFixedLf").css({"overflow":"hidden"});
+  $(".headerFixed").css({"overflow":"hidden"});
+  $(".content").css({"overflow":"scroll"});
+  //Dimenciones
+  $(".headerFixed").width($(".content").width()- 15);
+  $(".rowFixedLf").height($(".content").height() - 15);// -15: alto del scroll
+  $(".mainLf").height($(".headerFixed").height());
+  $(".mainLf").width($(".rowFixedLf").width());
+  //Configuración de los contenedores escrolables
+  $(".content").scroll(function () {
+    $(".headerFixed").scrollLeft($(".content").scrollLeft());
+    $(".rowFixedLf").scrollTop($(".content").scrollTop());
+  });
+  /*Fin Auto Configuración de la Tabla
+  *-------------------------------------*/    
+})();
+   
+</script> 
